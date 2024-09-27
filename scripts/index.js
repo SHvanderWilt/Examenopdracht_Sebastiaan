@@ -217,7 +217,6 @@ function loop() {
 document.addEventListener('keydown', function(e) {
   if (gameOver) return;
 
-  // left and right arrow keys (move)
   if (e.which === 37 || e.which === 39) {
     const col = e.which === 37
       ? tetromino.col - 1
