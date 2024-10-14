@@ -1,6 +1,7 @@
 let score = 0;
 let level = 1;
 let linesCleared = 0;
+const MAX_LEVEL = 10;
 
 function updateScore(lines) {
     const points = [0, 100, 300, 500, 800]; // Points for 0, 1, 2, 3, or 4 lines cleared
@@ -8,7 +9,7 @@ function updateScore(lines) {
     linesCleared += lines;
 
     // Level up every 10 lines
-    if (linesCleared >= 10 * level) {
+    if (linesCleared >= 10 * level && level < MAX_LEVEL) {
         level++;
         updateGameSpeed();  // Update speed when level increases
     }
