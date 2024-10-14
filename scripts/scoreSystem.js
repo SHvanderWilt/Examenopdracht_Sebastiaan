@@ -4,17 +4,17 @@ let linesCleared = 0;
 const MAX_LEVEL = 10;
 
 function updateScore(lines) {
-    const points = [0, 100, 300, 500, 800]; // Points for 0, 1, 2, 3, or 4 lines cleared
-    score += points[lines] * level; // Multiply by current level for difficulty scaling
+    const points = [0, 100, 300, 500, 800];
+    score += points[lines] * level;
     linesCleared += lines;
 
     // Level up every 10 lines
     if (linesCleared >= 10 * level && level < MAX_LEVEL) {
         level++;
-        updateGameSpeed();  // Update speed when level increases
+        updateGameSpeed();
     }
     
-    updateScoreDisplay(); // Update the display of score/level
+    updateScoreDisplay();
 }
 
 function clearLines() {
@@ -33,15 +33,15 @@ function clearLines() {
 }
 
 function isLineComplete(row) {
-    return playfield[row].every(cell => !!cell); // Checks if every cell in the row is filled
+    return playfield[row].every(cell => !!cell);
 }
 
 function removeLine(row) {
     for (let r = row; r > 0; r--) {
-        playfield[r] = playfield[r - 1]; // Move all rows above down by 1
+        playfield[r] = playfield[r - 1];
     }
 
-    playfield[0] = new Array(playfield[0].length).fill(0); // Clear the top row
+    playfield[0] = new Array(playfield[0].length).fill(0);
 }
 
 function updateScoreDisplay() {
@@ -51,6 +51,6 @@ function updateScoreDisplay() {
 
 function updateGameSpeed() {
     cancelAnimationFrame(rAF);
-    count = Math.max(10, 35 - (level - 1) * 5); // Increase speed by reducing count threshold
+    count = Math.max(10, 35 - (level - 1) * 5);
     rAF = requestAnimationFrame(loop);
 }
