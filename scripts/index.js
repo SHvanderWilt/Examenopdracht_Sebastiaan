@@ -73,20 +73,7 @@ function placeTetromino() {
     }
   }
 
-  for (let row = playfield.length - 1; row >= 0; ) {
-    if (playfield[row].every(cell => !!cell)) {
-
-      for (let r = row; r >= 0; r--) {
-        for (let c = 0; c < playfield[r].length; c++) {
-          playfield[r][c] = playfield[r-1][c];
-        }
-      }
-    }
-    else {
-      row--;
-    }
-  }
-
+  clearLines(); // Call clearLines to check for completed lines
   tetromino = getNextTetromino();
 }
 
@@ -110,6 +97,7 @@ const canvas = document.getElementById('game');
 const context = canvas.getContext('2d');
 const grid = 32;
 const tetrominoSequence = [];
+const gridHeight = 20; // Added this to match with your score system.js
 
 const playfield = [];
 
