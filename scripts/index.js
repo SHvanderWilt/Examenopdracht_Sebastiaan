@@ -8,7 +8,13 @@ const canvas = document.getElementById('game');
 const context = canvas.getContext('2d');
 const previewCanvas = document.getElementById('preview');
 const previewContext = previewCanvas.getContext('2d');
-const grid = 32;
+const scaleFactor = Math.min(window.innerWidth / 320, window.innerHeight / 640); // Scaling based on screen size
+const grid = Math.floor(32 * scaleFactor); // Adjust grid size based on scale factor
+canvas.width = 320 * scaleFactor;
+canvas.height = 640 * scaleFactor;
+previewCanvas.width = 100 * scaleFactor;
+previewCanvas.height = 150 * scaleFactor;
+
 const tetrominoSequence = [];
 const upcomingTetrominos = [];
 const playfield = [];
@@ -91,10 +97,10 @@ function renderPreview() {
       row.forEach((cell, colIndex) => {
         if (cell) {
           previewContext.fillRect(
-            colIndex * 20 + 10,
-            rowIndex * 20 + index * 60 + 10,
-            18,
-            18
+            colIndex * grid + 10,
+            rowIndex * grid + index * (grid * 3) + 10,
+            grid - 2,
+            grid - 2
           );
         }
       });

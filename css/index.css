@@ -6,33 +6,55 @@ html, body {
 body {
   background: black;
   display: flex;
+  /* flex-direction: column; */
   align-items: center;
   justify-content: center;
+  height: 100vh;
+  margin: 0;
 }
 
 canvas {
   border: 1px solid white;
+  /* display: block; */
+  margin-bottom: 10px;
 }
 
 #scoreDisplay, #levelDisplay {
   color: white;
-  font-family: monospace;
-  font-size: 20px;
-  text-align: center;
-  margin: 5px 0;
+  font-size: 18px;
+}
+
+#preview {
+  background-color: #f0f0f0;
+  margin-left: 20px;
 }
 
 .displayContainer {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px; 
+  justify-content: space-around;
+}
+
+#game {
+  width: 320px;
+  height: 640px;
 }
 
 #preview {
-  float: left;
-  margin-left: 20px;
-  width: 100px;
-  height: 150px;
-  background-color: #f0f0f0;
+  display: flex;
+}
+
+@media screen and (max-width: 600px) {
+  #game {
+    width: 100%;
+    height: auto;
+  }
+
+  #preview {
+    width: 80px;
+    height: 120px;
+  }
+
+  .displayContainer {
+    margin-top: 10px;
+  }
 }
