@@ -28,3 +28,11 @@ canvas {
   align-items: center;
   margin-top: 20px; 
 }
+
+#preview {
+  float: left;
+  margin-left: 20px;
+  width: 100px;
+  height: 150px;
+  background-color: #f0f0f0;
+}
