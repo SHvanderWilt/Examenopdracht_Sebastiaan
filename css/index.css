@@ -37,10 +37,7 @@ canvas {
 #game {
   width: 320px;
   height: 640px;
-}
-
-#preview {
-  display: flex;
+  border-radius: 10px;
 }
 
 @media screen and (max-width: 600px) {

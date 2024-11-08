@@ -12,8 +12,8 @@ const scaleFactor = Math.min(window.innerWidth / 320, window.innerHeight / 640);
 const grid = Math.floor(32 * scaleFactor); // Adjust grid size based on scale factor
 canvas.width = 320 * scaleFactor;
 canvas.height = 640 * scaleFactor;
-previewCanvas.width = 100 * scaleFactor;
-previewCanvas.height = 150 * scaleFactor;
+previewCanvas.width = 150 * scaleFactor;
+previewCanvas.height = 175 * scaleFactor;
 
 const tetrominoSequence = [];
 const upcomingTetrominos = [];
