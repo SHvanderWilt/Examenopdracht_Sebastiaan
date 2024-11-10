@@ -3,16 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self';">
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome for icon -->
     <title>index</title>
 </head>
 <body>
     <canvas id="game"></canvas>
-    <canvas id="preview"></canvas>
-
-    <div class="displayContainer">
-        <div id="scoreDisplay">Score: 0</div>
-        <div id="levelDisplay">Level: 1</div>
+    
+    <!-- Grouping preview canvas and displayContainer together -->
+    <div class="preview-container">
+        <canvas id="preview"></canvas>
+        
+        <div class="displayContainer">
+            <div id="scoreDisplay">Score: 0</div>
+            <div id="levelDisplay">Level: 1</div>
+        </div>
     </div>
 
     <button id="pause-btn">Pause</button>
@@ -25,9 +31,25 @@
             <button id="cancelBtn">Don't Reset</button>
         </div>
     </div>
-    
+
+    <div id="howToPlayIcon" class="icon" onclick="showInstructions()">
+        <i class="fas fa-question-circle"></i>
+    </div>
+
+    <div id="instructionsModal" class="modal">
+        <div class="modal-content">
+            <h2>How to Play</h2>
+            <p>Use the arrow keys to move the blocks.</p>
+            <p>Press space to rotate the blocks.</p>
+            <p>Press 'P' to pause the game.</p>
+            <p>Press 'R' to reset the game.</p>
+            <button onclick="closeInstructions()">Close</button>
+        </div>
+    </div>
 
     <script src="scripts/index.js"></script>
     <script src="scripts/scoreSystem.js"></script>
+    <script src="scripts/modalVisibility.js"></script>
 </body>
+
 </html>
