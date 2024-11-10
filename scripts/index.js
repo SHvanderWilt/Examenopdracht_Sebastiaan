@@ -238,12 +238,12 @@ function loop() {
 document.addEventListener('keydown', function(e) {
   if (gameOver) return;
 
-  if (e.which === 32) { // Space bar key to toggle pause
-    paused = !paused;
-    if (!paused) {
-      loop(); // Restart the loop if unpaused
-    }
-  }
+  // if (e.which === 32) { // Space bar key to toggle pause
+  //   paused = !paused;
+  //   if (!paused) {
+  //     loop(); // Restart the loop if unpaused
+  //   }
+  // }
 
   if (paused) return;
 

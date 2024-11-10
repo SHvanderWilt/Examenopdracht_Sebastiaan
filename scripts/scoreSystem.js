@@ -8,7 +8,6 @@ function updateScore(lines) {
     score += points[lines] * level;
     linesCleared += lines;
 
-    // Level up every 10 lines
     if (linesCleared >= 10 * level && level < MAX_LEVEL) {
         level++;
         updateGameSpeed();
@@ -49,8 +48,78 @@ function updateScoreDisplay() {
     document.getElementById('levelDisplay').textContent = `Level: ${level}`;
 }
 
-function updateGameSpeed() {
+function resetGame() {
+    // Reset score and level
+    score = 0;
+    level = 1;
+    linesCleared = 0;
+    updateScoreDisplay();
+
+    // Reset playfield
+    for (let row = 0; row < playfield.length; row++) {
+        playfield[row].fill(0);
+    }
+
+    // Reset tetromino sequence and upcoming pieces
+    tetrominoSequence.length = 0;
+    upcomingTetrominos.length = 0;
+    generateSequence();
+    renderPreview();
+
+    // Reset game variables
+    gameOver = false;
+    paused = false;
+    count = 0;
+    tetromino = getNextTetromino();
+
+    // Restart game loop
+    cancelAnimationFrame(rAF); // Stop any existing game loop
+    rAF = requestAnimationFrame(loop); // Start a new game loop
+}
+
+function resetLevel() {
+    // Reset playfield for the current level only
+    for (let row = 0; row < playfield.length; row++) {
+        playfield[row].fill(0);
+    }
+
+    // Reset the current tetromino and preview
+    tetrominoSequence.length = 0;
+    upcomingTetrominos.length = 0;
+    generateSequence();
+    renderPreview();
+    tetromino = getNextTetromino();
+
+    // Restart game loop
     cancelAnimationFrame(rAF);
-    count = Math.max(10, 35 - (level - 1) * 5);
     rAF = requestAnimationFrame(loop);
+}
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+    paused = true; // Pause the game
+    document.getElementById('resetModal').style.display = 'flex';
+});
+
+document.getElementById('resetGameBtn').addEventListener('click', () => {
+    resetGame();
+    closeModal();
+    paused = false; // Unpause game after reset
+    loop(); // Restart the game loop
+});
+
+document.getElementById('resetLevelBtn').addEventListener('click', () => {
+    resetLevel();
+    closeModal();
+    paused = false; // Unpause game after level reset
+    loop(); // Restart the game loop
+});
+
+document.getElementById('cancelBtn').addEventListener('click', () => {
+    closeModal();
+    paused = false; // Unpause game if cancelled
+    loop(); // Restart the game loop
+});
+
+function closeModal() {
+    document.getElementById('resetModal').style.display = 'none';
 }
