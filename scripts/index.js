@@ -1,9 +1,11 @@
+// Random integer function for generating random values
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// Set up game and preview canvas
 const canvas = document.getElementById('game');
 const context = canvas.getContext('2d');
 const previewCanvas = document.getElementById('preview');
@@ -15,66 +17,34 @@ canvas.height = 640 * scaleFactor;
 previewCanvas.width = 150 * scaleFactor;
 previewCanvas.height = 175 * scaleFactor;
 
+// Define game variables
 const tetrominoSequence = [];
 const upcomingTetrominos = [];
 const playfield = [];
 const gridHeight = 20;
 
-for (let row = -2; row < 20; row++) {
-  playfield[row] = [];
-  for (let col = 0; col < 10; col++) {
-    playfield[row][col] = 0;
-  }
+// Initialize playfield
+for (let row = -2; row < gridHeight; row++) {
+  playfield[row] = Array(10).fill(0);
 }
 
+// Tetromino shapes and colors
 const tetrominos = {
-  'I': [
-    [0,0,0,0],
-    [1,1,1,1],
-    [0,0,0,0],
-    [0,0,0,0]
-  ],
-  'J': [
-    [1,0,0],
-    [1,1,1],
-    [0,0,0],
-  ],
-  'L': [
-    [0,0,1],
-    [1,1,1],
-    [0,0,0],
-  ],
-  'O': [
-    [1,1],
-    [1,1],
-  ],
-  'S': [
-    [0,1,1],
-    [1,1,0],
-    [0,0,0],
-  ],
-  'Z': [
-    [1,1,0],
-    [0,1,1],
-    [0,0,0],
-  ],
-  'T': [
-    [0,1,0],
-    [1,1,1],
-    [0,0,0],
-  ]
+  'I': [[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]],
+  'J': [[1,0,0],[1,1,1],[0,0,0]],
+  'L': [[0,0,1],[1,1,1],[0,0,0]],
+  'O': [[1,1],[1,1]],
+  'S': [[0,1,1],[1,1,0],[0,0,0]],
+  'Z': [[1,1,0],[0,1,1],[0,0,0]],
+  'T': [[0,1,0],[1,1,1],[0,0,0]]
 };
 
 const colors = {
-  'I': 'cyan',
-  'O': 'yellow',
-  'T': 'purple',
-  'S': 'green',
-  'Z': 'red',
-  'J': 'blue',
-  'L': 'orange'
+  'I': 'cyan', 'O': 'yellow', 'T': 'purple',
+  'S': 'green', 'Z': 'red', 'J': 'blue', 'L': 'orange'
 };
 
+// Generate a randomized sequence of tetrominos
 function generateSequence() {
   const sequence = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'];
   while (sequence.length) {
@@ -82,12 +52,12 @@ function generateSequence() {
     const name = sequence.splice(rand, 1)[0];
     tetrominoSequence.push(name);
   }
-
   if (upcomingTetrominos.length === 0) {
     upcomingTetrominos.push(...tetrominoSequence.slice(-3));
   }
 }
 
+// Render the preview box
 function renderPreview() {
   previewContext.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
   upcomingTetrominos.forEach((name, index) => {
@@ -99,8 +69,7 @@ function renderPreview() {
           previewContext.fillRect(
             colIndex * grid + 10,
             rowIndex * grid + index * (grid * 3) + 10,
-            grid - 2,
-            grid - 2
+            grid - 2, grid - 2
           );
         }
       });
@@ -108,66 +77,67 @@ function renderPreview() {
   });
 }
 
+// Get the next tetromino and update the preview
 function getNextTetromino() {
-  if (tetrominoSequence.length === 0) {
-    generateSequence();
-  }
+  if (tetrominoSequence.length === 0) generateSequence();
 
   const name = tetrominoSequence.pop();
   upcomingTetrominos.pop();
   upcomingTetrominos.unshift(tetrominoSequence[tetrominoSequence.length - 1]);
-  renderPreview();
+
+  renderPreview(); // Only update preview when tetromino changes
 
   const matrix = tetrominos[name];
-  const col = playfield[0].length / 2 - Math.ceil(matrix[0].length / 2);
+  const col = Math.floor(playfield[0].length / 2 - matrix[0].length / 2);
   const row = name === 'I' ? -1 : -2;
 
-  return {
-    name: name,
-    matrix: matrix,
-    row: row,
-    col: col
-  };
+  return { name, matrix, row, col };
 }
 
+// Rotate tetromino
 function rotate(matrix) {
   const N = matrix.length - 1;
-  return matrix.map((row, i) =>
-    row.map((val, j) => matrix[N - j][i])
-  );
+  return matrix.map((row, i) => row.map((val, j) => matrix[N - j][i]));
 }
 
+// Check if movement is valid
 function isValidMove(matrix, cellRow, cellCol) {
-  for (let row = 0; row < matrix.length; row++) {
-    for (let col = 0; col < matrix[row].length; col++) {
-      if (matrix[row][col] && (
-          cellCol + col < 0 ||
-          cellCol + col >= playfield[0].length ||
-          cellRow + row >= playfield.length ||
-          playfield[cellRow + row][cellCol + col])
-        ) {
-        return false;
-      }
-    }
-  }
-  return true;
+  return matrix.every((row, r) => row.every((cell, c) =>
+    !cell || (
+      cellCol + c >= 0 &&
+      cellCol + c < playfield[0].length &&
+      cellRow + r < playfield.length &&
+      !playfield[cellRow + r][cellCol + c]
+    )
+  ));
 }
 
-function placeTetromino() {
-  for (let row = 0; row < tetromino.matrix.length; row++) {
-    for (let col = 0; col < tetromino.matrix[row].length; col++) {
-      if (tetromino.matrix[row][col]) {
-        if (tetromino.row + row < 0) {
-          return showGameOver();
-        }
-        playfield[tetromino.row + row][tetromino.col + col] = tetromino.name;
-      }
+// Clear filled lines
+function clearLines() {
+  for (let row = playfield.length - 1; row >= 0; row--) {
+    if (playfield[row].every(cell => cell !== 0)) {
+      playfield.splice(row, 1);
+      playfield.unshift(Array(playfield[0].length).fill(0));
+      row++;
     }
   }
+}
+
+// Place the current tetromino on the playfield
+function placeTetromino() {
+  tetromino.matrix.forEach((row, r) => {
+    row.forEach((cell, c) => {
+      if (cell) {
+        if (tetromino.row + r < 0) return showGameOver();
+        playfield[tetromino.row + r][tetromino.col + c] = tetromino.name;
+      }
+    });
+  });
   clearLines();
   tetromino = getNextTetromino();
 }
 
+// Display game over screen
 function showGameOver() {
   cancelAnimationFrame(rAF);
   gameOver = true;
@@ -182,12 +152,14 @@ function showGameOver() {
   context.fillText('GAME OVER!', canvas.width / 2, canvas.height / 2);
 }
 
+// Game variables
 let count = 0;
 let tetromino = getNextTetromino();
 let rAF = null;
 let gameOver = false;
 let paused = false;
 
+// Main game loop
 function loop() {
   if (paused) {
     context.fillStyle = 'black';
@@ -205,15 +177,15 @@ function loop() {
   rAF = requestAnimationFrame(loop);
   context.clearRect(0, 0, canvas.width, canvas.height);
 
-  for (let row = 0; row < 20; row++) {
-    for (let col = 0; col < 10; col++) {
-      if (playfield[row][col]) {
-        const name = playfield[row][col];
-        context.fillStyle = colors[name];
-        context.fillRect(col * grid, row * grid, grid - 1, grid - 1);
+  // Draw playfield and falling tetromino
+  playfield.forEach((row, r) => {
+    row.forEach((cell, c) => {
+      if (cell) {
+        context.fillStyle = colors[cell];
+        context.fillRect(c * grid, r * grid, grid - 1, grid - 1);
       }
-    }
-  }
+    });
+  });
 
   if (tetromino) {
     if (++count > 35) {
@@ -225,60 +197,43 @@ function loop() {
       }
     }
     context.fillStyle = colors[tetromino.name];
-    for (let row = 0; row < tetromino.matrix.length; row++) {
-      for (let col = 0; col < tetromino.matrix[row].length; col++) {
-        if (tetromino.matrix[row][col]) {
-          context.fillRect((tetromino.col + col) * grid, (tetromino.row + row) * grid, grid - 1, grid - 1);
+    tetromino.matrix.forEach((row, r) => {
+      row.forEach((cell, c) => {
+        if (cell) {
+          context.fillRect((tetromino.col + c) * grid, (tetromino.row + r) * grid, grid - 1, grid - 1);
         }
-      }
-    }
+      });
+    });
   }
 }
 
-document.addEventListener('keydown', function(e) {
+// Event listeners for controls
+document.addEventListener('keydown', (e) => {
   if (gameOver) return;
-
-  // if (e.which === 32) { // Space bar key to toggle pause
-  //   paused = !paused;
-  //   if (!paused) {
-  //     loop(); // Restart the loop if unpaused
-  //   }
-  // }
-
   if (paused) return;
 
   switch (e.which) {
     case 37: // Left arrow
-      if (isValidMove(tetromino.matrix, tetromino.row, tetromino.col - 1)) {
-        tetromino.col--;
-      }
+      if (isValidMove(tetromino.matrix, tetromino.row, tetromino.col - 1)) tetromino.col--;
       break;
     case 39: // Right arrow
-      if (isValidMove(tetromino.matrix, tetromino.row, tetromino.col + 1)) {
-        tetromino.col++;
-      }
+      if (isValidMove(tetromino.matrix, tetromino.row, tetromino.col + 1)) tetromino.col++;
       break;
     case 40: // Down arrow
-      if (isValidMove(tetromino.matrix, tetromino.row + 1, tetromino.col)) {
-        tetromino.row++;
-      } else {
-        placeTetromino();
-      }
+      if (isValidMove(tetromino.matrix, tetromino.row + 1, tetromino.col)) tetromino.row++;
+      else placeTetromino();
       break;
     case 38: // Up arrow (rotate)
       const rotated = rotate(tetromino.matrix);
-      if (isValidMove(rotated, tetromino.row, tetromino.col)) {
-        tetromino.matrix = rotated;
-      }
+      if (isValidMove(rotated, tetromino.row, tetromino.col)) tetromino.matrix = rotated;
       break;
   }
 });
 
 document.getElementById('pause-btn').addEventListener('click', () => {
   paused = !paused;
-  if (!paused) {
-    loop(); // Restart the loop if unpaused
-  }
+  if (!paused) loop();
 });
 
-loop();  // Start the game loop initially
+// Start the game
+loop();

@@ -59,9 +59,9 @@ canvas {
 #buttons {
   display: flex;
   flex-direction: column;
-  margin-right: 15px;
+  margin-right: 25px;
+  margin-top: 500px;
   width: 100px;
-  color: #fff;
   
 }
 
@@ -143,5 +143,9 @@ canvas {
  
 button {
     margin-top: 10px;
+    color: white;
+    background-color: black;
+    border: 7px solid rgb(97, 95, 95);
+    border-radius: 10px;
 }
 

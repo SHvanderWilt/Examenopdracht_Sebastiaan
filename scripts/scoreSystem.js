@@ -3,6 +3,23 @@ let level = 1;
 let linesCleared = 0;
 const MAX_LEVEL = 10;
 
+let gameSpeed = 35;  // Controls the falling speed of the tetrominoes
+const speedPerLevel = 2;  // Number of levels before the speed increases
+const minSpeed = 10; // Minimum speed
+
+let rAF;  // This will store the animation frame ID for canceling the loop
+
+// Function to update game speed based on the current level
+function updateGameSpeed() {
+    gameSpeed = Math.max(minSpeed, 35 - (level - 1) * speedPerLevel);  // Ensures speed doesn't go below `minSpeed`
+}
+
+// Reset the game speed
+function resetGameSpeed() {
+    gameSpeed = 35;  // Reset to default speed
+    updateGameSpeed();  // Recalculate the speed based on the starting level
+}
+
 function updateScore(lines) {
     const points = [0, 100, 300, 500, 800];
     score += points[lines] * level;
@@ -12,13 +29,13 @@ function updateScore(lines) {
         level++;
         updateGameSpeed();
     }
-    
+
     updateScoreDisplay();
 }
 
 function clearLines() {
     let lines = 0;
-    
+
     for (let row = gridHeight - 1; row >= 0; row--) {
         if (isLineComplete(row)) {
             removeLine(row);
@@ -55,6 +72,9 @@ function resetGame() {
     linesCleared = 0;
     updateScoreDisplay();
 
+    // Reset game speed
+    resetGameSpeed();
+
     // Reset playfield
     for (let row = 0; row < playfield.length; row++) {
         playfield[row].fill(0);
@@ -72,9 +92,9 @@ function resetGame() {
     count = 0;
     tetromino = getNextTetromino();
 
-    // Restart game loop
-    cancelAnimationFrame(rAF); // Stop any existing game loop
-    rAF = requestAnimationFrame(loop); // Start a new game loop
+    // Stop any existing game loop and start a new one
+    cancelAnimationFrame(rAF); // Stop the existing game loop
+    rAF = requestAnimationFrame(loop); // Start the game loop
 }
 
 function resetLevel() {
@@ -90,7 +110,10 @@ function resetLevel() {
     renderPreview();
     tetromino = getNextTetromino();
 
-    // Restart game loop
+    // Reset the game speed based on the new level
+    updateGameSpeed();
+
+    // Stop the current loop and restart with the new speed
     cancelAnimationFrame(rAF);
     rAF = requestAnimationFrame(loop);
 }
@@ -101,25 +124,53 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 });
 
 document.getElementById('resetGameBtn').addEventListener('click', () => {
-    resetGame();
-    closeModal();
-    paused = false; // Unpause game after reset
-    loop(); // Restart the game loop
+    // Refresh the page to reset everything
+    location.reload();
 });
 
 document.getElementById('resetLevelBtn').addEventListener('click', () => {
-    resetLevel();
+    resetLevel();  // Reset the level but keep the game running
     closeModal();
     paused = false; // Unpause game after level reset
-    loop(); // Restart the game loop
+    loop(); // Start the game loop immediately after reset
 });
 
 document.getElementById('cancelBtn').addEventListener('click', () => {
     closeModal();
     paused = false; // Unpause game if cancelled
-    loop(); // Restart the game loop
+    loop(); // Start the game loop immediately after cancelling
 });
 
 function closeModal() {
     document.getElementById('resetModal').style.display = 'none';
+}
+
+
+// Draw playfield and falling tetromino
+playfield.forEach((row, r) => {
+    row.forEach((cell, c) => {
+        if (cell) {
+            context.fillStyle = colors[cell];
+            context.fillRect(c * grid, r * grid, grid - 1, grid - 1);
+        }
+    });
+});
+
+if (tetromino) {
+    if (++count > gameSpeed) {  // Use `gameSpeed` for the speed control
+        tetromino.row++;
+        count = 0;
+        if (!isValidMove(tetromino.matrix, tetromino.row, tetromino.col)) {
+            tetromino.row--;
+            placeTetromino();
+        }
+    }
+    context.fillStyle = colors[tetromino.name];
+    tetromino.matrix.forEach((row, r) => {
+        row.forEach((cell, c) => {
+            if (cell) {
+                context.fillRect((tetromino.col + c) * grid, (tetromino.row + r) * grid, grid - 1, grid - 1);
+            }
+        });
+    });
 }
