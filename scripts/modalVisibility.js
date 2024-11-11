@@ -1,7 +1,17 @@
 function showInstructions() {
-    document.getElementById('instructionsModal').style.display = 'flex';
+    const instructionsModal = document.getElementById('instructionsModal');
+    if (instructionsModal) {
+        instructionsModal.style.display = 'flex';
+    } else {
+        console.warn('Instructions modal not found.');
+    }
 }
 
 function closeInstructions() {
-    document.getElementById('instructionsModal').style.display = 'none';
+    const instructionsModal = document.getElementById('instructionsModal');
+    if (instructionsModal) {
+        instructionsModal.style.display = 'none';
+    } else {
+        console.warn('Instructions modal not found.');
+    }
 }

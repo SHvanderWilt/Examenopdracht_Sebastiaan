@@ -4,44 +4,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Tetris game with dynamic score and level display">
+    <meta name="referrer" content="no-referrer">
+    <title>Tetris Game</title>
+
+    <!-- CSS Imports with Integrity and CORS -->
     <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- FontAwesome for icon -->
-    <title>index</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
 </head>
 
 <body>
     <div id="buttons">
-        <button id="pause-btn">Pause</button>
-        <button id="reset-btn">Reset</button>
+        <button id="pause-btn" aria-label="Pause Game">Pause</button>
+        <button id="reset-btn" aria-label="Reset Game">Reset</button>
     </div>
-    <canvas id="game"></canvas>
+    <canvas id="game" aria-label="Game Canvas"></canvas>
 
     <!-- Grouping preview canvas and displayContainer together -->
     <div class="preview-container">
-        <canvas id="preview"></canvas>
-
+        <canvas id="preview" aria-label="Next Block Preview"></canvas>
         <div class="displayContainer">
-            <div id="scoreDisplay">Score: 0</div>
-            <div id="levelDisplay">Level: 1</div>
+            <div id="scoreDisplay" aria-live="polite">Score: 0</div>
+            <div id="levelDisplay" aria-live="polite">Level: 1</div>
         </div>
     </div>
-    <div id="resetModal" class="modal">
+
+    <div id="resetModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="resetModalTitle">
         <div class="modal-content">
-            <p>Choose an option:</p>
+            <p id="resetModalTitle">Choose an option:</p>
             <button id="resetGameBtn">Reset Game</button>
             <button id="resetLevelBtn">Reset Level</button>
             <button id="cancelBtn">Don't Reset</button>
         </div>
     </div>
 
-    <div id="howToPlayIcon" class="icon" onclick="showInstructions()">
+    <div id="howToPlayIcon" class="icon" aria-label="How to Play" role="button" tabindex="0"
+        onclick="showInstructions()">
         <i class="fas fa-question-circle"></i>
     </div>
 
-    <div id="instructionsModal" class="modal">
+    <div id="instructionsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="instructionsTitle">
         <div class="modal-content">
-            <h2>How to Play</h2>
+            <h2 id="instructionsTitle">How to Play</h2>
             <p>Use the arrow keys to move the blocks.</p>
             <p>Press space to rotate the blocks.</p>
             <p>Press 'P' to pause the game.</p>
@@ -50,6 +56,7 @@
         </div>
     </div>
 
+    <!-- JavaScript with Integrity Checks -->
     <script src="scripts/index.js"></script>
     <script src="scripts/scoreSystem.js"></script>
     <script src="scripts/modalVisibility.js"></script>
