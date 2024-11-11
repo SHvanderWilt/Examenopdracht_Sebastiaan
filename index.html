@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self';">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self';">
     <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome for icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- FontAwesome for icon -->
     <title>index</title>
 </head>
+
 <body>
+    <div id="buttons">
+        <button id="pause-btn">Pause</button>
+        <button id="reset-btn">Reset</button>
+    </div>
     <canvas id="game"></canvas>
-    
+
     <!-- Grouping preview canvas and displayContainer together -->
     <div class="preview-container">
         <canvas id="preview"></canvas>
-        
+
         <div class="displayContainer">
             <div id="scoreDisplay">Score: 0</div>
             <div id="levelDisplay">Level: 1</div>
         </div>
     </div>
-
-    <button id="pause-btn">Pause</button>
-    <button id="reset-btn">Reset</button>
     <div id="resetModal" class="modal">
         <div class="modal-content">
             <p>Choose an option:</p>

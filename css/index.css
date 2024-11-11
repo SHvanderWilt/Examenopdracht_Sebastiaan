@@ -56,6 +56,15 @@ canvas {
   background-color: black;
 }
 
+#buttons {
+  display: flex;
+  flex-direction: column;
+  margin-right: 15px;
+  width: 100px;
+  color: #fff;
+  
+}
+
 @media screen and (max-width: 600px) {
   #game {
     width: 100%;
@@ -131,7 +140,7 @@ canvas {
     max-width: 500px;
     width: 90%;
 }
-
+ 
 button {
     margin-top: 10px;
 }
